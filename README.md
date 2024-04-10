@@ -1,2 +1,2 @@
 # quick-search
-A high. performance API combine with redis
+A high performance API combine with redis
