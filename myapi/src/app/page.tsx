@@ -21,9 +21,13 @@ export default function Home() {
 
   return (
       <div>
-        <input value={input} onChange={(e) => {
+        <input
+            value={input}
+            onChange={(e) => {
           setInput(e.target.value)
-        }} type="text" />
+        }}
+            placeholder="Search airports..."
+            className="text-zinc-500" type="text" />
       </div>
   );
 }
