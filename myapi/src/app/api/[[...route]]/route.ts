@@ -13,36 +13,49 @@ type EnvConfig = {
 }
 
 app.get('/search', async (c) => {
-    const {UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN} = env<EnvConfig>(c)
+    try {
+        const {UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN} = env<EnvConfig>(c)
 
-    const redis = new Redis({
-        url: UPSTASH_REDIS_REST_URL,
-        token: UPSTASH_REDIS_REST_TOKEN,
-    })
+        const start = performance.now();
 
-    const query = c.req.query('q')?.toLowerCase()
+        const redis = new Redis({
+            url: UPSTASH_REDIS_REST_URL,
+            token: UPSTASH_REDIS_REST_TOKEN,
+        })
 
-    const resp = []
-    const rank = await redis.zrank('2terms', query)
-    if (rank !== null && rank !== undefined) {
-        const temp = await redis.zrange<string[]>('2terms', rank, rank + 100)
+        const query = c.req.query('q')?.toLowerCase()
 
-        for (const el of temp) {
-            // @ts-ignore
-            if (!el.startsWith(query)) {
-                break
-            }
+        const resp = []
+        const rank = await redis.zrank('2terms', query)
+        if (rank !== null && rank !== undefined) {
+            const temp = await redis.zrange<string[]>('2terms', rank, rank + 100)
 
-            if (el.endsWith('*')) {
-                resp.push(el.substring(0, el.length - 1))
+            for (const el of temp) {
+                // @ts-ignore
+                if (!el.startsWith(query)) {
+                    break
+                }
+
+                if (el.endsWith('*')) {
+                    resp.push(el.substring(0, el.length - 1))
+                }
             }
         }
-    }
-    console.log(resp)
-    return c.json({
-        "response": resp,
-    })
 
+        const end = performance.now();
+
+        return c.json({
+            "response": resp,
+            "duration": end - start,
+        })
+    } catch (error) {
+        console.error(error)
+
+        return c.json({
+            "response": [],
+            "message": 'Something went wrong when uploading data to Redis.'
+        })
+    }
 })
 
 export const GET = handle(app)
