@@ -20,14 +20,14 @@ export default function Home() {
   }, [input])
 
   return (
-      <div>
+      <main className="h-screen w-screen grainy">
         <input
             value={input}
             onChange={(e) => {
-          setInput(e.target.value)
-        }}
+              setInput(e.target.value)
+            }}
             placeholder="Search airports..."
-            className="text-zinc-500" type="text" />
-      </div>
+            className="text-zinc-500" type="text"/>
+      </main>
   );
 }
