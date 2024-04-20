@@ -2,6 +2,7 @@ import {Hono} from "hono";
 import {env} from "hono/adapter"
 import {handle} from "hono/vercel";
 import {Redis} from "@upstash/redis/cloudflare";
+import {cors} from "hono/cors";
 
 export const runtime = "edge"
 
@@ -12,6 +13,7 @@ type EnvConfig = {
     UPSTASH_REDIS_REST_TOKEN: string
 }
 
+app.use('/*', cors())
 app.get('/search', async (c) => {
     try {
         const {UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN} = env<EnvConfig>(c)
@@ -22,7 +24,7 @@ app.get('/search', async (c) => {
             url: UPSTASH_REDIS_REST_URL,
             token: UPSTASH_REDIS_REST_TOKEN,
         })
-
+        console.log(UPSTASH_REDIS_REST_URL)
         const query = c.req.query('q')?.toLowerCase()
 
         const resp = []
@@ -53,7 +55,7 @@ app.get('/search', async (c) => {
 
         return c.json({
             "response": [],
-            "message": 'Something went wrong when uploading data to Redis.'
+            "message": 'Something went wrong when fetching redis data.'
         })
     }
 })

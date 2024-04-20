@@ -22,7 +22,7 @@ export default function Home() {
     const fetchData = async () => {
       if (!input) return setSearchResults(undefined)
 
-      const resp = await fetch(`/api/search?q=${input}`);
+      const resp = await fetch(`https://myapi.yunqi-uiuc.workers.dev/api/search?q=${input}`);
       const data = (await resp.json()) as {response: string[], duration: number};
       setSearchResults(data)
     }
