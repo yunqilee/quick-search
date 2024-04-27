@@ -5,7 +5,7 @@ to search in milliseconds.
 Inspired by: [joschan21 / fastapi](https://github.com/joschan21/fastapi)
 
 ### data source
-The link of the original dataset is as below:
+The link of the original dataset is here:
 https://github.com/lxndrblz/Airports
 
 This project picks airports with or near the United States, the total number of it
